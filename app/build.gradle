@@ -50,4 +50,8 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.7'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
+
+    //MQTT
+    // https://mvnrepository.com/artifact/org.fusesource.mqtt-client/mqtt-client
+    compile group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.0.2'
 }
