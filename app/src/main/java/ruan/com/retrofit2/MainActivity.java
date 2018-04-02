@@ -4,25 +4,27 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.nio.charset.Charset;
 
 import javax.inject.Inject;
 
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import ruan.com.Net.HttpManager.HttpResponse;
 import ruan.com.Net.HttpManager.Interface.HttpCallback;
+import ruan.com.Net.MqttManager.Interface.MqttCallback;
+import ruan.com.Net.MqttManager.MqttManager;
+import ruan.com.Net.MqttManager.MqttRequest;
 import ruan.com.Net.UdpManager.Interface.UdpCallback;
-import ruan.com.Net.UdpManager.UdpRquest;
 
 /**
  * Created by 19820 on 2018/1/4.
  */
 
-public class MainActivity extends Activity implements IView , HttpCallback.Response , UdpCallback.Response{
+public class MainActivity extends Activity implements IView , HttpCallback.Response , UdpCallback.Response , MqttCallback.Response{
 
 
     public Context context;
@@ -38,9 +40,24 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
 
         context = this;
 
-        String msg = "你好 udp server";
+        final MqttRequest mqttRequest = new MqttRequest(context , this);
+        mqttRequest.init("test");
 
-        new UdpRquest(context , this).request(msg.getBytes(Charset.forName("utf-8")) , "192.168.1.101" , 5066 , 1);
+        findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mqttRequest.send("test" , "测试 android send data");
+            }
+        });
+
+//        String msg = "你好 udp server";
+
+//        new UdpRquest(context , this).request(msg.getBytes(Charset.forName("utf-8")) , "192.168.1.101" , 5066 , 1);
+
+//        MqttManager mqttManager = new MqttManager(this);
+//        mqttManager.
+
+
 
 //        DaggerTestComponent.builder().githubApiModule(new GithubApiModule(this)).testModule(new TestModule(this)).build().inject(this);//@Component负责连接起@Inject和@Module注解
 //        mPresent.updateUI();
@@ -98,11 +115,11 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
      * 请求成功
      *
      * @param requestCode 请求标识
-     * @param baseObject  请求返回的对象
+     * @param response  请求返回的对象
      */
     @Override
-    public void onSuccess(int requestCode, BaseObject baseObject) {
-        EncodeData encodeData = (EncodeData) baseObject;
+    public void onSuccess(int requestCode, HttpResponse response) {
+        EncodeData encodeData = (EncodeData) response;
         System.out.println("success:" + encodeData.toString());
     }
 
@@ -137,6 +154,28 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
     @Override
     public void onUdpError(int requestCode, Throwable throwable) {
         Toast.makeText(context , throwable.toString() , Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 请求成功
+     *
+     * @param requestCode 请求标识
+     * @param message     请求返回的数据
+     */
+    @Override
+    public void onSuccess(String requestCode, String message) {
+        Toast.makeText(context , requestCode + "--" + message , Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 请求失败
+     *
+     * @param requestCode 请求标识
+     * @param throwable   请求失败的对象
+     */
+    @Override
+    public void onError(String requestCode, Throwable throwable) {
+        Toast.makeText(context , requestCode + "--" + throwable.toString() , Toast.LENGTH_SHORT).show();
     }
 }
 

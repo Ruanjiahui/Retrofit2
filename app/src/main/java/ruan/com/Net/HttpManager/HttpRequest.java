@@ -2,6 +2,7 @@ package ruan.com.Net.HttpManager;
 
 import android.content.Context;
 
+import ruan.com.Net.NetLog;
 import ruan.com.retrofit2.BaseObject;
 import ruan.com.Net.BaseNetCallback;
 import ruan.com.Net.HttpManager.Interface.HttpCallback;
@@ -14,30 +15,30 @@ import rx.Observable;
 
 public class HttpRequest extends BaseRequest {
 
-    private HttpCallback.Response response;
+    private HttpCallback.Response callResponse;
 
-    public HttpRequest(Context context , HttpCallback.Response response){
+    public HttpRequest(Context context , HttpCallback.Response callResponse){
         super(context , null);
-        this.response = response;
+        this.callResponse = callResponse;
     }
 
-    public HttpRequest(Context context , HttpCallback.Response response , BaseNetCallback netCallback){
+    public HttpRequest(Context context , HttpCallback.Response callResponse , BaseNetCallback netCallback){
         super(context , netCallback);
-        this.response = response;
+        this.callResponse = callResponse;
     }
 
     public void request(Observable<?> observable, int requestCode){
-        Observable<BaseObject> tObservable = (Observable<BaseObject>) observable;
+        Observable<HttpResponse> tObservable = (Observable<HttpResponse>) observable;
         //请求访问获取数据
         request(tObservable, requestCode, new ObservableCallback() {
             @Override
-            public void onSuccess(int requestCode, BaseObject baseObject) {
-                response.onSuccess(requestCode , baseObject);
+            public void onSuccess(int requestCode, HttpResponse response) {
+                callResponse.onSuccess(requestCode , response);
             }
 
             @Override
             public void onError(int requestCode, Throwable throwable) {
-                response.onError(requestCode , throwable);
+                callResponse.onError(requestCode , throwable);
             }
         });
     }

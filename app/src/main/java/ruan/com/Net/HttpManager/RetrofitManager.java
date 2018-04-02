@@ -24,7 +24,7 @@ public class RetrofitManager {
             retrofit = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .baseUrl(DEBUG_HOST + "fanghuaLaw/")
+                    .baseUrl(DEBUG_HOST)
                     .build();
             return retrofit;
         }

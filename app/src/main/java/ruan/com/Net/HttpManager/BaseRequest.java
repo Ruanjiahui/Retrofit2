@@ -3,6 +3,7 @@ package ruan.com.Net.HttpManager;
 import android.content.Context;
 import android.widget.Toast;
 
+import ruan.com.Net.NetLog;
 import ruan.com.Net.NetWorkUtil;
 import ruan.com.retrofit2.BaseObject;
 import ruan.com.Net.BaseNetCallback;
@@ -30,7 +31,7 @@ public class BaseRequest {
 
     protected interface ObservableCallback {
 
-        void onSuccess(int requestCode, BaseObject baseObject);
+        void onSuccess(int requestCode, HttpResponse response);
 
 
         void onError(int requestCode, Throwable throwable);
@@ -44,7 +45,7 @@ public class BaseRequest {
      * @param requestCode
      * @param callback
      */
-    protected void request(Observable<BaseObject> observable, final int requestCode, final ObservableCallback callback) {
+    protected void request(Observable<HttpResponse> observable, final int requestCode, final ObservableCallback callback) {
         //判断是否联网
         if (!NetWorkUtil.isNetWorkAvailable(context)) {
             //如果回调接口不为空则回调回去
@@ -57,7 +58,7 @@ public class BaseRequest {
             return;
         }
 
-        subscription = observable.subscribeOn(Schedulers.newThread()).observeOn(Schedulers.io()).subscribe(new Observer<BaseObject>() {
+        subscription = observable.subscribeOn(Schedulers.newThread()).observeOn(Schedulers.io()).subscribe(new Observer<HttpResponse>() {
 
             @Override
             public void onCompleted() {
@@ -67,12 +68,14 @@ public class BaseRequest {
 
             @Override
             public void onError(Throwable e) {
+                NetLog.info(e.toString());
                 callback.onError(requestCode, e);
             }
 
             @Override
-            public void onNext(BaseObject baseObject) {
-                callback.onSuccess(requestCode, baseObject);
+            public void onNext(HttpResponse response) {
+                NetLog.info(response.toString());
+                callback.onSuccess(requestCode, response);
             }
         });
     }

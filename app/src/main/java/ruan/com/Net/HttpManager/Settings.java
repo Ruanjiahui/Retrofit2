@@ -12,7 +12,7 @@ public class Settings {
     /**
      * 测试服务器地址
      */
-    public static final String DEBUG_HOST = "http://39.108.192.191:8080/";
+    public static final String DEBUG_HOST = "http://39.108.192.191:8080/fanghuaLaw/";
 
     /**
      * 正式服务器地址

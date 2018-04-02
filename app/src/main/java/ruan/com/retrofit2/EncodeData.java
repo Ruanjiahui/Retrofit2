@@ -3,10 +3,12 @@ package ruan.com.retrofit2;
 import java.io.Serializable;
 import java.util.List;
 
+import ruan.com.Net.HttpManager.HttpResponse;
+
 /**
  * Created by tanxinye on 2016/10/23.
  */
-public class EncodeData extends BaseObject{
+public class EncodeData extends HttpResponse{
 
 
     /**
