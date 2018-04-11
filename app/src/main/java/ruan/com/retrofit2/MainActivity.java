@@ -2,11 +2,15 @@ package ruan.com.retrofit2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -33,6 +37,8 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
     @Inject
     TestPresent mPresent;
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +46,27 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
 
         context = this;
 
-        final MqttRequest mqttRequest = new MqttRequest(context , this);
-        mqttRequest.init("test");
+//        final MqttRequest mqttRequest = new MqttRequest(context , this);
+//        mqttRequest.init("test");
+
+//        findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mqttRequest.send("test" , "测试 android send data");
+//            }
+//        });
+
+
+        EventBus.getDefault().register(this);
 
         findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mqttRequest.send("test" , "测试 android send data");
+                Intent intent = new Intent(MainActivity.this , TestActivity.class);
+                startActivity(intent);
             }
         });
+
 
 //        String msg = "你好 udp server";
 
@@ -103,6 +121,25 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
 //                );
 
 
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    @Subscribe
+    public void onMessage(ListBean bean){
+        Toast.makeText(this , bean.getAddress() , Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void onMessage(String bean){
+        Toast.makeText(this , "string:" + bean , Toast.LENGTH_SHORT).show();
     }
 
 

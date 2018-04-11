@@ -54,4 +54,7 @@ dependencies {
     //MQTT
     // https://mvnrepository.com/artifact/org.fusesource.mqtt-client/mqtt-client
     compile group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.0.2'
+
+    //EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
 }
