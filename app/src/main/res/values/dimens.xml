@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--baseactivity  标题高度-->
+    <dimen name="base_title_h">50dp</dimen>
+    <!--baseactivity  标题左手边图片的大小-->
+    <dimen name="base_title_left_p_s">25dp</dimen>
+
+
+    <!--marigin边距-->
+    <dimen name="mar_8">8dp</dimen>
+    <dimen name="mar_10">10dp</dimen>
+    <dimen name="mar_12">12dp</dimen>
+    <dimen name="mar_15">15dp</dimen>
+
+
+
+    <!--文字-->
+
+
+
+    <!--baseactivity  标题中间文字大小-->
+    <dimen name="txt_s_15">15sp</dimen>
+    <dimen name="txt_s_16">16sp</dimen>
+    <dimen name="txt_s_18">18sp</dimen>
+</resources>
