@@ -23,12 +23,13 @@ import ruan.com.Net.MqttManager.Interface.MqttCallback;
 import ruan.com.Net.MqttManager.MqttManager;
 import ruan.com.Net.MqttManager.MqttRequest;
 import ruan.com.Net.UdpManager.Interface.UdpCallback;
+import ruan.com.retrofit2.BaseControl.BaseActivity;
 
 /**
  * Created by 19820 on 2018/1/4.
  */
 
-public class MainActivity extends Activity implements IView , HttpCallback.Response , UdpCallback.Response , MqttCallback.Response{
+public class MainActivity extends BaseActivity implements IView , HttpCallback.Response , UdpCallback.Response , MqttCallback.Response{
 
 
     public Context context;
@@ -38,6 +39,13 @@ public class MainActivity extends Activity implements IView , HttpCallback.Respo
     TestPresent mPresent;
 
 
+    /**
+     * activity  start
+     */
+    @Override
+    protected void init() {
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

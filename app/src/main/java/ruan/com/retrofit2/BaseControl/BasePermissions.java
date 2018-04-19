@@ -1,5 +1,6 @@
 package ruan.com.retrofit2.BaseControl;
 
+import android.Manifest;
 import android.app.Activity;
 
 /**
@@ -17,9 +18,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ruan.com.retrofit2.R;
 
 /**
  * Created by yuandl on 2016-11-16.
@@ -28,6 +32,34 @@ import java.util.List;
 public class BasePermissions extends Activity {
     private final String TAG = "MPermissions";
     private int REQUEST_CODE_PERMISSION = 0x00099;
+
+    private boolean isPermission = false;
+    private int requestCode;
+
+    public boolean checkPermission(String[] permission, int requestCode) {
+        this.requestCode = requestCode;
+        if (checkSelf(permission))
+            return true;
+        ActivityCompat.requestPermissions(this , permission , requestCode);
+        return isPermission;
+    }
+
+    /**
+     * 检查这些权限是否获取
+     * @param permission
+     * @return
+     */
+    public boolean checkSelf(String[] permission){
+        for (String per : permission) {
+            //说明没有获取该权限
+            if (ActivityCompat.checkSelfPermission(this, per) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
 
     /**
      * 请求权限
@@ -94,14 +126,33 @@ public class BasePermissions extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE_PERMISSION) {
-            if (verifyPermissions(grantResults)) {
-                permissionSuccess(REQUEST_CODE_PERMISSION);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && requestCode == this.requestCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                this.isPermission = true;
             } else {
-                permissionFail(REQUEST_CODE_PERMISSION);
-                showTipsDialog();
+                Toast.makeText(this, R.string.permission_fail_t , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, requestCode);
             }
         }
+
+
+//        if (requestCode == REQUEST_CODE_PERMISSION) {
+//
+//
+//            if (verifyPermissions(grantResults)) {
+//                permissionSuccess(REQUEST_CODE_PERMISSION);
+//            } else {
+//                permissionFail(REQUEST_CODE_PERMISSION);
+//                showTipsDialog();
+//            }
+//
+//
+//        }
     }
 
     /**
@@ -160,6 +211,7 @@ public class BasePermissions extends Activity {
 
     /**
      * 权限获取失败
+     *
      * @param requestCode
      */
     public void permissionFail(int requestCode) {

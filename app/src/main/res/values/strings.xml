@@ -3,4 +3,14 @@
     <!--baseactivity  标题中间文字-->
     <string name="base_title_t">Title</string>
 
+
+
+
+
+
+
+
+    <!--权限-->
+    <string name="permission_fail_t">请在设置中打开权限后继续</string>
+
 </resources>

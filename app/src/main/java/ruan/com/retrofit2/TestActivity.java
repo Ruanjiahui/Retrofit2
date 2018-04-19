@@ -8,13 +8,18 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.Arrays;
+import java.util.List;
 
 import ruan.com.retrofit2.BaseControl.BaseActivity;
 
@@ -56,44 +61,14 @@ public class TestActivity extends BaseActivity {
     public void OnClickCenterText() {
         super.OnClickCenterText();
 
-        requestPermission(new String[]{Manifest.permission.CALL_PHONE}, 0);
-    }
 
-    @Override
-    public void permissionFail(int requestCode) {
-        super.permissionFail(requestCode);
-
-        showTipsDialog();
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void permissionSuccess(int requestCode) {
-        super.permissionSuccess(requestCode);
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:15119481373"));
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission(new String[]{Manifest.permission.CALL_PHONE} , 200)){
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:15119481373"));
+            Toast.makeText(this, "123", Toast.LENGTH_SHORT).show();
             startActivity(intent);
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-//        }
-//        ActivityCompat.requestPermissions(this , new String[]{Manifest.permission.CALL_PHONE} , 0);
-//        Toast.makeText(TestActivity.this, "权限开启成功", Toast.LENGTH_LONG).show();
+            List<String> list = null;
+            System.out.println(list.toString());
+        }
     }
 
-
-
-    //    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.test_main);
-//
-//
-//
-//    }
 }

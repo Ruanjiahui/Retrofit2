@@ -55,8 +55,10 @@ public class ActivityFactory{
      * 移除全部的对象那个
      */
     public void removeAll(){
-        for (Object obj : map)
-            map.remove(obj);
+        for (int i = map.size() - 1 ; i >= 0 ; i--){
+            Object obj = map.get(i);
+            ((Activity)obj).finish();
+        }
     }
 
 
