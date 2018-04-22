@@ -56,7 +56,7 @@ public class BasePermissions extends Activity {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
 

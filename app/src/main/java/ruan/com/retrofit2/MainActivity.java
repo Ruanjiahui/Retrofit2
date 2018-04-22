@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,10 @@ import ruan.com.Net.MqttManager.MqttManager;
 import ruan.com.Net.MqttManager.MqttRequest;
 import ruan.com.Net.UdpManager.Interface.UdpCallback;
 import ruan.com.retrofit2.BaseControl.BaseActivity;
+import ruan.com.retrofit2.Language.LanguageType;
+import ruan.com.retrofit2.Language.MultiLanguageUtil;
+import ruan.com.retrofit2.Language.OnChangeLanguageEvent;
+import ruan.com.retrofit2.Log.LogFactory;
 
 /**
  * Created by 19820 on 2018/1/4.
@@ -44,7 +49,15 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
      */
     @Override
     protected void init() {
+        EventBus.getDefault().register(this);
 
+        setDoubleQuit(true);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChangeLanguageEvent(OnChangeLanguageEvent event){
+        Toast.makeText(context , "切换成功" , Toast.LENGTH_SHORT).show();
+        LogFactory.getInstance().i(MainActivity.class , "ChangeLanguage");
     }
 
     @Override
@@ -65,7 +78,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 //        });
 
 
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
 
         findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
             @Override

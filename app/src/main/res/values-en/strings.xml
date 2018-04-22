@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Retrofit2</string>
+    <!--baseactivity  标题中间文字-->
+    <string name="base_title_t">Title</string>
+
+
+
+
+    <string name="double_quit_t">please click again quit app</string>
+
+
+
+    <!--权限-->
+    <string name="permission_fail_t">please open setting on toking permission continue later</string>
+
+</resources>

@@ -37,6 +37,10 @@
             </intent-filter>
         </receiver>
 
+
+        <service android:name=".ServiceControl.BaseService"/>
+
+
     </application>
 
 </manifest>

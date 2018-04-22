@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
+
+import java.security.Key;
 
 import ruan.com.retrofit2.R;
 
@@ -25,6 +30,12 @@ public abstract class BaseActivity extends BasePermissions implements View.OnCli
 
     //标识是否退出
     private boolean isQuit = true;
+    //设置双击退出
+    private boolean isDouble = false;
+    //设置退出文字
+    private String quit_msg = "";
+    //退出按钮触发事件
+    private BackKeyListener backKeyListener;
 
 
     private ImageView base_title_left_p;
@@ -33,6 +44,15 @@ public abstract class BaseActivity extends BasePermissions implements View.OnCli
     private TextView base_title_t;
     private TextView base_title_left_t;
     private TextView base_title_right_t;
+
+    /**
+     * 触发点击退出按钮的接口
+     */
+    public interface BackKeyListener{
+
+        public void onClickBack();
+
+    }
 
 
     @Override
@@ -88,6 +108,86 @@ public abstract class BaseActivity extends BasePermissions implements View.OnCli
                 OnClickCenterText();
                 break;
         }
+    }
+
+    /**
+     * 设置双击退出
+     * @param isDouble
+     * @param quit_msg
+     */
+    public void setDoubleQuit(boolean isDouble , String quit_msg , BackKeyListener backKeyListener){
+        this.isDouble = isDouble;
+        this.quit_msg = quit_msg;
+        this.backKeyListener = backKeyListener;
+    }
+
+    /**
+     * 设置双击退出
+     * @param isDouble
+     * @param quit_msg
+     */
+    public void setDoubleQuit(boolean isDouble , String quit_msg){
+        this.isDouble = isDouble;
+        this.quit_msg = quit_msg;
+    }
+
+    /**
+     * 设置双击退出
+     * @param isDouble
+     */
+    public void setDoubleQuit(boolean isDouble , BackKeyListener backKeyListener){
+        this.isDouble = isDouble;
+        this.backKeyListener = backKeyListener;
+    }
+
+    /**
+     * 设置双击退出
+     * @param isDouble
+     */
+    public void setDoubleQuit(boolean isDouble){
+        this.isDouble = isDouble;
+    }
+
+    //双击退出点击第一次时间
+    private long startTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //设置双击退出
+        if (isDouble){
+            if (keyCode == KeyEvent.KEYCODE_BACK){
+                //如果点击时间 与开始 点击时间 大于 2秒 则不是退出 则储存点击时间
+                if (System.currentTimeMillis() - startTime > 2000) {
+                    startTime = System.currentTimeMillis();
+                    //判断文字是否为空 // 空则默认提示
+                    if (TextUtils.isEmpty(quit_msg))
+                        quit_msg = getResources().getString(R.string.double_quit_t);
+                    //提示
+                    Toast.makeText(this , quit_msg , Toast.LENGTH_SHORT).show();
+                }else {
+                    //双击触发事件
+                    //触发接口不为空 则返回触发接口
+                    if (backKeyListener != null)
+                        backKeyListener.onClickBack();
+                    //否则 就直接触发默认 退出app
+                    else
+                        onDestroy();
+                }
+            }
+        } else {
+            //点击退出按钮触发方法
+            if (keyCode == KeyEvent.KEYCODE_BACK)
+                OnClickBackKey();
+        }
+        return true;
+    }
+
+    /**
+     * 点击退出按钮
+     */
+    public void OnClickBackKey(){
+        //默认删除activity
+        onDestroy();
     }
 
     /**
