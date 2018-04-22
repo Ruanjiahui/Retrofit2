@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.solver.widgets.ConstraintTableLayout;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +49,10 @@ public abstract class BaseActivity extends BasePermissions implements View.OnCli
     private TextView base_title_left_t;
     private TextView base_title_right_t;
 
+
+    private FrameLayout base_con_layout;
+    private RelativeLayout base_title_Layout;
+
     /**
      * 触发点击退出按钮的接口
      */
@@ -65,11 +73,15 @@ public abstract class BaseActivity extends BasePermissions implements View.OnCli
         base_title_t = findViewById(R.id.base_title_t);
         base_title_left_t = findViewById(R.id.base_title_left_t);
         base_title_right_t = findViewById(R.id.base_title_right_t);
+        base_con_layout = findViewById(R.id.base_con_layout);
+        base_title_Layout = findViewById(R.id.base_title_Layout);
 
         //创建activity 同时加入链表
         ActivityFactory.getInstance().add(this);
 
-        ImmersionBar.with(this).statusBarColor(R.color.color_blue).fitsSystemWindows(true).init();
+        int colorID = R.color.color_blue;
+        base_title_Layout.setBackgroundColor(getResources().getColor(colorID));
+        ImmersionBar.with(this).statusBarColor(colorID).fitsSystemWindows(true).init();
 
         base_title_left_p.setOnClickListener(this);
         base_title_right_p.setOnClickListener(this);
@@ -79,6 +91,26 @@ public abstract class BaseActivity extends BasePermissions implements View.OnCli
 
         init();
     }
+
+    /**
+     * 设置标题是否显示
+     * @param isVisiable
+     */
+    public void setTitleVisiable(boolean isVisiable){
+        if (!isVisiable) {
+            base_title_Layout.setVisibility(View.GONE);
+            ImmersionBar.with(this).statusBarColor(R.color.color_transparent , 1).fitsSystemWindows(true).init();
+        }
+    }
+
+    /**
+     * 将布局添加
+     * @param layoutID
+     */
+    public void addContentView(int layoutID){
+        base_con_layout.addView(View.inflate(this , layoutID , null));
+    }
+
 
     /**
      * 点击事件

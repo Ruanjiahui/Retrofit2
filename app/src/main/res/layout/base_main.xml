@@ -2,51 +2,50 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
-    
-    
+
+
     <RelativeLayout
+        android:id="@+id/base_title_Layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_title_h"
-        android:background="@color/color_blue">
-        
+        android:layout_height="@dimen/base_title_h">
+
         <ImageView
             android:id="@+id/base_title_left_p"
             android:layout_width="@dimen/base_title_left_p_s"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/mar_12"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/mar_12"
             android:src="@mipmap/back"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/base_title_left_t"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/txt_s_16"
-            android:text="@string/base_title_t"
-            android:gravity="center"
-            android:layout_toEndOf="@+id/base_title_left_p"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/mar_12"
-            android:maxEms="5"
+            android:layout_toEndOf="@+id/base_title_left_p"
             android:ellipsize="end"
-            android:singleLine="true"/>
+            android:gravity="center"
+            android:maxEms="5"
+            android:singleLine="true"
+            android:text="@string/base_title_t"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/txt_s_16" />
 
         <TextView
             android:id="@+id/base_title_t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/txt_s_16"
-            android:text="@string/base_title_t"
-            android:layout_gravity="center"
             android:layout_centerInParent="true"
-            android:maxEms="5"
+            android:layout_gravity="center"
             android:ellipsize="end"
-            android:singleLine="true"/>
+            android:maxEms="5"
+            android:singleLine="true"
+            android:text="@string/base_title_t"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/txt_s_16" />
 
 
         <ImageView
@@ -54,28 +53,33 @@
             android:layout_width="@dimen/base_title_left_p_s"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/mar_12"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/mar_12"
             android:src="@mipmap/right"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/base_title_right_t"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/txt_s_16"
-            android:text="@string/base_title_t"
-            android:gravity="center"
-            android:layout_toStartOf="@+id/base_title_right_p"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/mar_12"
-            android:maxEms="5"
+            android:layout_toStartOf="@+id/base_title_right_p"
             android:ellipsize="end"
-            android:singleLine="true"/>
+            android:gravity="center"
+            android:maxEms="5"
+            android:singleLine="true"
+            android:text="@string/base_title_t"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/txt_s_16" />
 
     </RelativeLayout>
-    
-    
+
+    <FrameLayout
+        android:id="@+id/base_con_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>

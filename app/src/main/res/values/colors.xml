@@ -8,4 +8,5 @@
     <!--黑色-->
     <color name="color_black">#000000</color>
     <color name="color_blue">#FF1FACED</color>
+    <color name="color_transparent">#00000000</color>
 </resources>

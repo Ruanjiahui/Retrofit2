@@ -5,13 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -49,9 +57,52 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
      */
     @Override
     protected void init() {
+        setTitleVisiable(false);
+
         EventBus.getDefault().register(this);
 
         setDoubleQuit(true);
+
+
+        addContentView(R.layout.activity_main);
+
+        findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this , TestActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        TwinklingRefreshLayout refreshLayout = findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+//                refreshLayout.finishRefreshing();
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                refreshLayout.finishLoadmore();
+            }
+        });
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        ArrayList<BaseAdapterResp> arrayList = new ArrayList<>();
+        for (int i = 0 ; i < 100 ; i++) {
+            ItemData itemData = new ItemData();
+            itemData.setItem_t("hello！！");
+            arrayList.add(itemData);
+        }
+        BaseRecyclerViewAdapter adapter = new BaseRecyclerViewAdapter(this , R.layout.item_main , 1 , arrayList);
+
+        recyclerView.setAdapter(adapter);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -60,12 +111,25 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
         LogFactory.getInstance().i(MainActivity.class , "ChangeLanguage");
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        context = this;
+//    @Override
+//    protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//
+//        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        ArrayList<BaseAdapterResp> arrayList = new ArrayList<>();
+//        ItemData itemData = new ItemData();
+//        itemData.setItem_t("hello！！");
+//        arrayList.add(itemData);
+//        BaseRecyclerViewAdapter adapter = new BaseRecyclerViewAdapter(this , R.layout.item_main , 1 , arrayList);
+//
+//        recyclerView.setAdapter(adapter);
+//
+//        context = this;
 
 //        final MqttRequest mqttRequest = new MqttRequest(context , this);
 //        mqttRequest.init("test");
@@ -80,13 +144,13 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 
 //        EventBus.getDefault().register(this);
 
-        findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this , TestActivity.class);
-                startActivity(intent);
-            }
-        });
+//        findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this , TestActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
 //        String msg = "你好 udp server";
@@ -142,7 +206,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 //                );
 
 
-    }
+//    }
 
 
     @Override
