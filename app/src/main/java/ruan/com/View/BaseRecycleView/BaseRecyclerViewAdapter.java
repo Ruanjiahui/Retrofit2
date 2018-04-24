@@ -1,4 +1,4 @@
-package ruan.com.retrofit2;
+package ruan.com.View.BaseRecycleView;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import ruan.com.View.OnItemClickListener;
 
 /**
  * Created by 19820 on 2018/4/22.
@@ -22,6 +24,8 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHodler
     private int layoutID;
 
     private int Type;
+
+    private OnItemClickListener onItemClickLisneter;
 
     public BaseRecyclerViewAdapter(Context context , int layoutID , int Type , ArrayList<BaseAdapterResp> arrayList){
         this.context = context;
@@ -78,7 +82,10 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHodler
      */
     @Override
     public void onBindViewHolder(BaseViewHodler holder, int position) {
+        //设置显示
         holder.setItemView(arrayList.get(position) , Type , position);
+        //点击事件
+        holder.setItemClick(arrayList.get(position) , onItemClickLisneter , Type , position);
     }
 
     /**
@@ -90,4 +97,13 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHodler
     public int getItemCount() {
         return arrayList.size();
     }
+
+    /**
+     * adpter 点击事件
+     * @param onItemClickLisneter
+     */
+    public void setOnItemClickLisneter(OnItemClickListener onItemClickLisneter){
+        this.onItemClickLisneter = onItemClickLisneter;
+    }
+
 }

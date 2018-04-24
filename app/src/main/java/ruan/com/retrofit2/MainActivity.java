@@ -1,10 +1,8 @@
 package ruan.com.retrofit2;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -29,14 +27,13 @@ import dagger.Provides;
 import ruan.com.Net.HttpManager.HttpResponse;
 import ruan.com.Net.HttpManager.Interface.HttpCallback;
 import ruan.com.Net.MqttManager.Interface.MqttCallback;
-import ruan.com.Net.MqttManager.MqttManager;
-import ruan.com.Net.MqttManager.MqttRequest;
 import ruan.com.Net.UdpManager.Interface.UdpCallback;
+import ruan.com.View.BaseRecycleView.BaseAdapterResp;
+import ruan.com.View.OnItemClickListener;
 import ruan.com.retrofit2.BaseControl.BaseActivity;
-import ruan.com.retrofit2.Language.LanguageType;
-import ruan.com.retrofit2.Language.MultiLanguageUtil;
 import ruan.com.retrofit2.Language.OnChangeLanguageEvent;
 import ruan.com.retrofit2.Log.LogFactory;
+import ruan.com.View.BaseRecycleView.BaseRecyclerViewAdapter;
 
 /**
  * Created by 19820 on 2018/1/4.
@@ -101,8 +98,23 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
             arrayList.add(itemData);
         }
         BaseRecyclerViewAdapter adapter = new BaseRecyclerViewAdapter(this , R.layout.item_main , 1 , arrayList);
+        adapter.setOnItemClickLisneter(new OnItemClickListener() {
 
+            /**
+             * 列表点击
+             *
+             * @param resp     返回对象
+             * @param Type     类型
+             * @param position 点击列表标识
+             */
+            @Override
+            public void OnItemClick(BaseAdapterResp resp, int Type, int position) {
+                ItemData itemData = (ItemData) resp;
+                System.out.println(itemData.toString());
+            }
+        });
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this , LinearLayoutManager.VERTICAL));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

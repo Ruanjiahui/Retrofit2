@@ -11,10 +11,13 @@ import ruan.com.retrofit2.Constant;
 public class LogFactory {
 
     private static LogFactory factory;
+    private static String ClassName;
 
-    public static LogFactory getInstance() {
-        if (factory == null)
+    public static LogFactory getInstance(Class<?> cla) {
+        if (factory == null) {
             factory = new LogFactory();
+        }
+        ClassName = cla.getSimpleName();
         return factory;
     }
 
@@ -22,12 +25,24 @@ public class LogFactory {
     /**
      * 打印日志
      *
-     * @param cla 类名
+     * @param title  标题
      * @param msg 信息
      */
-    public void i(Class<?> cla, String msg) {
+    public void i(String title, String msg) {
         if (Constant.isDebug)
-            Log.i(cla.getSimpleName(), msg);
+            Log.i(ClassName + ":" + title + "-------->", msg);
+    }
+
+
+    /**
+     * 打印日志
+     *
+     * @param title  标题
+     * @param msg 信息
+     */
+    public void i(String title, Long msg) {
+        if (Constant.isDebug)
+            Log.i(ClassName + ":" + title + "-------->", "" + msg);
     }
 
 }

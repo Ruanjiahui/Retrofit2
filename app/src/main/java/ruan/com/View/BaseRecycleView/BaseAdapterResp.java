@@ -1,4 +1,4 @@
-package ruan.com.retrofit2;
+package ruan.com.View.BaseRecycleView;
 
 /**
  * Created by 19820 on 2018/4/22.
