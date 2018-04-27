@@ -5,8 +5,10 @@ import android.content.Context;
 import retrofit2.Retrofit;
 import ruan.com.Net.HttpManager.HttpRequest;
 import ruan.com.Net.BaseNetCallback;
+import ruan.com.Net.HttpManager.HttpResponse;
 import ruan.com.Net.HttpManager.Interface.HttpCallback;
 import ruan.com.Net.HttpManager.RetrofitManager;
+import ruan.com.retrofit2.EncodeData;
 import ruan.com.retrofit2.Http.Service.UserService;
 import rx.Observable;
 

@@ -66,9 +66,9 @@ public class TestActivity extends BaseActivity {
         super.OnClickCenterText();
         MultiLanguageUtil.init(TestActivity.this);
         MultiLanguageUtil multiLanguageUtil = MultiLanguageUtil.getInstance();
-        LogFactory.getInstance().i(TestActivity.class , multiLanguageUtil.getLanguageName(TestActivity.this));
+        LogFactory.getInstance(TestActivity.class).i("OnClickCenterText" , multiLanguageUtil.getLanguageName(TestActivity.this));
         multiLanguageUtil.updateLanguage(LanguageType.LANGUAGE_EN);
-        LogFactory.getInstance().i(TestActivity.class , multiLanguageUtil.getLanguageName(TestActivity.this));
+        LogFactory.getInstance(TestActivity.class).i("OnClickCenterText" , multiLanguageUtil.getLanguageName(TestActivity.this));
 //        Intent intent = new Intent(TestActivity.this, MainActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(intent);

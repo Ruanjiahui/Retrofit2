@@ -22,12 +22,12 @@ import ruan.com.retrofit2.R;
 
 public class BaseService extends Service {
 
-    private static LogFactory LOG = LogFactory.getInstance();
+    private static LogFactory LOG = LogFactory.getInstance(BaseService.class);
 
     @Override
     public void onCreate() {
         super.onCreate();
-        LOG.i(BaseService.class, "onCreate");
+        LOG.i("onCreate" , "onCreate");
         //添加服务到链表里面
         ServiceFactory.getInstance().addService(this);
 
@@ -35,7 +35,7 @@ public class BaseService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LOG.i(BaseService.class, "onStartCommand");
+        LOG.i("onStartCommand", "onStartCommand");
 
         showNotification();
 
@@ -45,14 +45,14 @@ public class BaseService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        LOG.i(BaseService.class, "onBind");
+        LOG.i("onBind", "onBind");
         return null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LOG.i(BaseService.class, "onDestroy");
+        LOG.i("onDestroy", "onDestroy");
         //移除服务
         ServiceFactory.getInstance().removeService(this);
     }

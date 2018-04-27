@@ -16,7 +16,7 @@ public class ActivityFactory{
 
     private static ActivityFactory factory;
 
-    private static LogFactory LOG = LogFactory.getInstance();
+    private static LogFactory LOG = LogFactory.getInstance(ActivityFactory.class);
 
     public static ActivityFactory getInstance(){
         if (map == null) {
@@ -34,7 +34,7 @@ public class ActivityFactory{
     public void add(Object object){
         if (map != null) {
             map.add(object);
-            LOG.i(ActivityFactory.class , "add:" + map.toString());
+            LOG.i("add:" , map.toString());
         }
     }
 
@@ -45,7 +45,7 @@ public class ActivityFactory{
     public void remove(Object object){
         if (map != null && map.size() > 0) {
             boolean isRM = false;
-            LOG.i(ActivityFactory.class , "remove:" + map.toString());
+            LOG.i("remove:" , map.toString());
             for (Object obj : map) {
                 //如果 移除的对象 存在  则移除  对象后面的全部移除
                 if (object == obj || isRM) {

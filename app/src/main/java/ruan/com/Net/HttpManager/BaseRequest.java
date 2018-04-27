@@ -10,6 +10,7 @@ import ruan.com.Net.BaseNetCallback;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static ruan.com.Net.HttpManager.Settings.*;
@@ -58,7 +59,7 @@ public class BaseRequest {
             return;
         }
 
-        subscription = observable.subscribeOn(Schedulers.newThread()).observeOn(Schedulers.io()).subscribe(new Observer<HttpResponse>() {
+        subscription = observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<HttpResponse>() {
 
             @Override
             public void onCompleted() {

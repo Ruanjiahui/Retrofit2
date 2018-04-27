@@ -14,7 +14,7 @@ import ruan.com.retrofit2.ServiceControl.BaseService;
 
 public class ApplicationFactory extends Application {
 
-    private static LogFactory LOG = LogFactory.getInstance();
+    private static LogFactory LOG = LogFactory.getInstance(ApplicationFactory.class);
 
     @Override
     public void onCreate() {
@@ -27,7 +27,7 @@ public class ApplicationFactory extends Application {
         MultiLanguageUtil.init(this);
 
         //配置语言
-        LOG.i(ApplicationFactory.class , MultiLanguageUtil.getInstance().getLanguageName(this));
+        LOG.i("onCreate" , MultiLanguageUtil.getInstance().getLanguageName(this));
         MultiLanguageUtil.getInstance().updateLanguage(MultiLanguageUtil.getInstance().getLanguageType());
 
 

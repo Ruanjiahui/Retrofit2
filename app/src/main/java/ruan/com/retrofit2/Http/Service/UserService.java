@@ -9,7 +9,6 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.QueryName;
 import ruan.com.retrofit2.EncodeData;
-import ruan.com.retrofit2.RegisterRequest;
 import rx.Observable;
 
 /**
@@ -17,11 +16,11 @@ import rx.Observable;
  */
 public interface UserService {
 
-    @POST("user/register/")
-    Observable<EncodeData> registerRequest(@Body RegisterRequest request);
-
-    @POST("user/uploadImage/")
-    Observable<EncodeData> uploadRegisterAvatarRequest(@Body MultipartBody multipartBody, @Query("data") String data);
+//    @POST("user/register/")
+//    Observable<EncodeData> registerRequest(@Body RegisterRequest request);
+//
+//    @POST("user/uploadImage/")
+//    Observable<EncodeData> uploadRegisterAvatarRequest(@Body MultipartBody multipartBody, @Query("data") String data);
 
     @POST("app/gettopicpage.do")
     Observable<EncodeData> gettopicpage(@Query("page") int page , @Query("type") int type);

@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import ruan.com.Net.UdpManager.Interface.UdpCallback;
 import ruan.com.View.BaseRecycleView.BaseAdapterResp;
 import ruan.com.View.OnItemClickListener;
 import ruan.com.retrofit2.BaseControl.BaseActivity;
+import ruan.com.retrofit2.Http.RequestApi;
 import ruan.com.retrofit2.Language.OnChangeLanguageEvent;
 import ruan.com.retrofit2.Log.LogFactory;
 import ruan.com.View.BaseRecycleView.BaseRecyclerViewAdapter;
@@ -48,6 +50,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
     @Inject
     TestPresent mPresent;
 
+    private HttpCallback.Response response;
 
     /**
      * activity  start
@@ -55,6 +58,8 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
     @Override
     protected void init() {
         setTitleVisiable(false);
+
+        response = this;
 
         EventBus.getDefault().register(this);
 
@@ -109,8 +114,9 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
              */
             @Override
             public void OnItemClick(BaseAdapterResp resp, int Type, int position) {
-                ItemData itemData = (ItemData) resp;
-                System.out.println(itemData.toString());
+//                ItemData itemData = (ItemData) resp;
+//                System.out.println(itemData.toString());
+                new RequestApi(MainActivity.this).RequestTopic(response , 1);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -120,7 +126,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChangeLanguageEvent(OnChangeLanguageEvent event){
         Toast.makeText(context , "切换成功" , Toast.LENGTH_SHORT).show();
-        LogFactory.getInstance().i(MainActivity.class , "ChangeLanguage");
+        LogFactory.getInstance(MainActivity.class).i("onChangeLanguageEvent" , "ChangeLanguage");
     }
 
 //    @Override
@@ -193,7 +199,6 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 
 //        new HttpRequest(context , this).request(observable , 1);
 
-//        new RequestApi(this).RequestTopic(this , 1);
 
 //        observable.subscribeOn(Schedulers.io()).observeOn(Schedulers.newThread())
 //                .subscribe(
@@ -254,7 +259,8 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
     @Override
     public void onSuccess(int requestCode, HttpResponse response) {
         EncodeData encodeData = (EncodeData) response;
-        System.out.println("success:" + encodeData.toString());
+//        System.out.println("success:" + encodeData.toString());
+        Toast.makeText(this , encodeData.getMessage() , Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -265,7 +271,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
      */
     @Override
     public void onError(int requestCode, Throwable throwable) {
-
+        LogFactory.getInstance(MainActivity.class).i("onError" , throwable.toString());
     }
 
     /**

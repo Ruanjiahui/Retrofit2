@@ -3,6 +3,7 @@ package ruan.com.Net.HttpManager;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static ruan.com.Net.HttpManager.Settings.*;
 
@@ -24,6 +25,7 @@ public class RetrofitManager {
             retrofit = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .baseUrl(DEBUG_HOST)
                     .build();
             return retrofit;
