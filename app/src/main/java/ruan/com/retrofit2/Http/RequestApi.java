@@ -8,7 +8,9 @@ import ruan.com.Net.BaseNetCallback;
 import ruan.com.Net.HttpManager.HttpResponse;
 import ruan.com.Net.HttpManager.Interface.HttpCallback;
 import ruan.com.Net.HttpManager.RetrofitManager;
+import ruan.com.retrofit2.BugUploadBean;
 import ruan.com.retrofit2.EncodeData;
+import ruan.com.retrofit2.Http.Service.UploadBugService;
 import ruan.com.retrofit2.Http.Service.UserService;
 import rx.Observable;
 
@@ -44,4 +46,16 @@ public class RequestApi {
         new HttpRequest(context , callback , netCallback).request(observable , requestCode);
     }
 
+    /**
+     * 上传bug
+     * @param bugUploadBean
+     * @param callback
+     * @param requestCode
+     */
+    public void UploadBug(BugUploadBean bugUploadBean , HttpCallback.Response callback , int requestCode){
+        UploadBugService apiService = retrofit.create(UploadBugService.class);
+        Observable<?> observable = apiService.commitBug(bugUploadBean);
+        //请求获取数据
+        new HttpRequest(context , callback , netCallback).request(observable , requestCode);
+    }
 }

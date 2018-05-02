@@ -1,5 +1,6 @@
 package ruan.com.retrofit2;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
@@ -61,6 +62,8 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 
         response = this;
 
+        checkPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE} , 200);
+
         EventBus.getDefault().register(this);
 
         setDoubleQuit(true);
@@ -114,9 +117,11 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
              */
             @Override
             public void OnItemClick(BaseAdapterResp resp, int Type, int position) {
+                ArrayList<String> array = null;
+                System.out.print(array.size());
 //                ItemData itemData = (ItemData) resp;
 //                System.out.println(itemData.toString());
-                new RequestApi(MainActivity.this).RequestTopic(response , 1);
+//                new RequestApi(MainActivity.this).RequestTopic(response , 1);
             }
         });
         recyclerView.setAdapter(adapter);

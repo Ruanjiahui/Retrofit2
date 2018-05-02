@@ -21,6 +21,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import ruan.com.Net.HttpManager.HttpResponse;
+import ruan.com.Net.HttpManager.Interface.HttpCallback;
+import ruan.com.Utils.AppApplicationMgr;
+import ruan.com.Utils.AppDateMgr;
+import ruan.com.Utils.AppPhoneMgr;
+import ruan.com.retrofit2.BugUploadBean;
+import ruan.com.retrofit2.Http.RequestApi;
+import ruan.com.retrofit2.HttpBaseResp;
+
 /**
  * Created by 19820 on 2018/4/19.
  */
@@ -39,12 +48,17 @@ public class CrashFactory implements Thread.UncaughtExceptionHandler {
     private Map<String, String> infos = new HashMap<String, String>();
 
     // 用于格式化日期,作为日志文件名的一部分
-    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss SSS");
+    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    //收集错误日志
+    private String error;
 
     private CrashFactory() {
     }
 
-    /** 获取CrashHandler实例 ,单例模式 */
+    /**
+     * 获取CrashHandler实例 ,单例模式
+     */
     public static CrashFactory getInstance() {
         return INSTANCE;
     }
@@ -110,6 +124,38 @@ public class CrashFactory implements Thread.UncaughtExceptionHandler {
         // 保存日志文件
         saveCrashInfo2File(ex);
 
+        //将数据上传到服务器
+        BugUploadBean bugUploadBean = new BugUploadBean();
+        AppPhoneMgr appPhoneMgr = new AppPhoneMgr();
+        bugUploadBean.setModel(appPhoneMgr.getPhoneModel());
+        bugUploadBean.setDebugOSVersion(AppPhoneMgr.getSystemVersion() + " " + appPhoneMgr.getSDKVersionNumber());
+        if (appPhoneMgr.isTablet(mContext))
+            bugUploadBean.setPhoneType("pad");
+        bugUploadBean.setAppPackage(AppApplicationMgr.getPackageName(mContext));
+        bugUploadBean.setAppInstallDate(formatter.format(new Date(AppApplicationMgr.getAppFirstInstallTime(mContext , bugUploadBean.getAppPackage()))));
+        bugUploadBean.setAppInstallUpdateDate(formatter.format(new Date(AppApplicationMgr.getAppLastUpdateTime(mContext , bugUploadBean.getAppPackage()))));
+        bugUploadBean.setAppVersionName(AppApplicationMgr.getVersionName(mContext));
+        bugUploadBean.setAppVersionCode(AppApplicationMgr.getVersionCode(mContext));
+        bugUploadBean.setBugData(error);
+        bugUploadBean.setBround(AppPhoneMgr.getDeviceBrand());
+        bugUploadBean.setDebugOS(AppPhoneMgr.getDeviceSystem());
+
+        new RequestApi(mContext).UploadBug(bugUploadBean, new HttpCallback.Response() {
+            @Override
+            public void onSuccess(int requestCode, HttpResponse response) {
+                HttpBaseResp resp = (HttpBaseResp) response;
+                Log.e("Ruan" , resp.toString());
+                if (resp.getCode() == 200000){
+                    System.out.println("bug 提交成功");
+                }
+            }
+
+            @Override
+            public void onError(int requestCode, Throwable throwable) {
+
+            }
+        } , 200);
+
         return true;
     }
 
@@ -147,7 +193,7 @@ public class CrashFactory implements Thread.UncaughtExceptionHandler {
      * 保存错误信息到文件中
      *
      * @param ex
-     * @return 返回文件名称,便于将文件传送到服务器
+     * @return 返回文件名称, 便于将文件传送到服务器  路径返回绝对路径
      */
     private String saveCrashInfo2File(Throwable ex) {
 
@@ -170,19 +216,23 @@ public class CrashFactory implements Thread.UncaughtExceptionHandler {
         String result = writer.toString();
         sb.append(result);
         try {
+            error = sb.toString();
+
             String time = formatter.format(new Date());
             String fileName = time + ".txt";
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 String path = Environment.getExternalStorageDirectory().getPath() + "/Android/Crash/";
                 File dir = new File(path);
                 if (!dir.exists()) {
-                    dir.mkdirs();
+                    boolean w = dir.mkdirs();
+                    System.out.println("mkdir:" + w);
                 }
                 FileOutputStream fos = new FileOutputStream(path + fileName);
                 fos.write(sb.toString().getBytes("UTF-8"));
                 fos.close();
-            }
-            return fileName;
+                return path + fileName;
+            } else
+                return null;
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
         }

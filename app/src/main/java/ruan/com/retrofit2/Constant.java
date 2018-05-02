@@ -6,7 +6,7 @@ package ruan.com.retrofit2;
 
 public class Constant {
 
-    public static boolean isDebug = true;
+    public static boolean isDebug = false;
 
 
 

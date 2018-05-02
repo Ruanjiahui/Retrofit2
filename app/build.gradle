@@ -50,6 +50,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.7'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     //MQTT
     // https://mvnrepository.com/artifact/org.fusesource.mqtt-client/mqtt-client
@@ -63,4 +64,8 @@ dependencies {
 
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
+
+    compileOnly 'org.projectlombok:lombok:1.16.20'
+    annotationProcessor 'org.projectlombok:lombok:1.16.20'
+
 }
