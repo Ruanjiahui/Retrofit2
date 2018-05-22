@@ -1,6 +1,5 @@
 package ruan.com.retrofit2;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
@@ -18,8 +17,14 @@ import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,10 +34,15 @@ import dagger.Provides;
 import ruan.com.Net.HttpManager.HttpResponse;
 import ruan.com.Net.HttpManager.Interface.HttpCallback;
 import ruan.com.Net.MqttManager.Interface.MqttCallback;
+import ruan.com.Net.MqttManager.MqttRequest;
 import ruan.com.Net.UdpManager.Interface.UdpCallback;
+import ruan.com.Net.UdpManager.UdpRequest;
+import ruan.com.Utils.AppApplicationMgr;
+import ruan.com.Utils.AppPhoneMgr;
 import ruan.com.View.BaseRecycleView.BaseAdapterResp;
 import ruan.com.View.OnItemClickListener;
 import ruan.com.retrofit2.BaseControl.BaseActivity;
+import ruan.com.retrofit2.BaseControl.CrashFactory;
 import ruan.com.retrofit2.Http.RequestApi;
 import ruan.com.retrofit2.Language.OnChangeLanguageEvent;
 import ruan.com.retrofit2.Log.LogFactory;
@@ -53,16 +63,19 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 
     private HttpCallback.Response response;
 
+    private MqttRequest mqttRequest;
+
+    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /**
      * activity  start
      */
     @Override
     protected void init() {
+        context = this;
         setTitleVisiable(false);
 
         response = this;
-
-        checkPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE} , 200);
 
         EventBus.getDefault().register(this);
 
@@ -71,61 +84,126 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
 
         addContentView(R.layout.activity_main);
 
+//        mqttRequest = new MqttRequest(context, new MqttCallback.Response() {
+//            /**
+//             * 请求成功
+//             *
+//             * @param topic 请求标识
+//             * @param message     请求返回的数据
+//             */
+//            @Override
+//            public void onSuccess(String topic, String message) {
+//                Toast.makeText(context , message , Toast.LENGTH_SHORT).show();
+//            }
+//
+//            /**
+//             * 请求失败
+//             *
+//             * @param topic 请求标识
+//             * @param throwable   请求失败的对象
+//             */
+//            @Override
+//            public void onError(String topic, Throwable throwable) {
+//                Toast.makeText(context , throwable.toString() , Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        mqttRequest.init("456");
+        final UdpRequest request = new UdpRequest(this , this);
+        request.init();
+
         findViewById(R.id.textview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this , TestActivity.class);
-                startActivity(intent);
+                String msg = "hello word!!";
+                request.send(msg.getBytes(Charset.forName("utf-8")) , 5506 , "192.168.101.21" , 200);
+
+//                //将数据上传到服务器
+//                BugUploadBean bugUploadBean = new BugUploadBean();
+//                AppPhoneMgr appPhoneMgr = new AppPhoneMgr();
+//                bugUploadBean.setModel(appPhoneMgr.getPhoneModel());
+//                bugUploadBean.setDebugOSVersion(AppPhoneMgr.getSystemVersion() + " " + appPhoneMgr.getSDKVersionNumber());
+//                if (appPhoneMgr.isTablet(context))
+//                    bugUploadBean.setPhoneType("pad");
+//                bugUploadBean.setAppPackage(AppApplicationMgr.getPackageName(context));
+//                bugUploadBean.setAppInstallDate(formatter.format(new Date(AppApplicationMgr.getAppFirstInstallTime(context , bugUploadBean.getAppPackage()))));
+//                bugUploadBean.setAppInstallUpdateDate(formatter.format(new Date(AppApplicationMgr.getAppLastUpdateTime(context , bugUploadBean.getAppPackage()))));
+//                bugUploadBean.setAppVersionName(AppApplicationMgr.getVersionName(context));
+//                bugUploadBean.setAppVersionCode(AppApplicationMgr.getVersionCode(context));
+//                bugUploadBean.setBugData("test bug");
+//                bugUploadBean.setBround(AppPhoneMgr.getDeviceBrand());
+//                bugUploadBean.setDebugOS(AppPhoneMgr.getDeviceSystem());
+
+//                new RequestApi(context).UploadBug(bugUploadBean, new HttpCallback.Response() {
+//
+//                    @Override
+//                    public void onSuccess(int requestCode, HttpResponse response) {
+//                        HttpBaseResp resp = (HttpBaseResp) response;
+//                        LogFactory.getInstance(CrashFactory.class).i("UploadBug" , resp.toString());
+//                        if (resp.getCode() == 200000){
+//                            System.out.println("bug 提交成功");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(int requestCode, Throwable throwable) {
+//
+//                    }
+//                } , 200);
+
+//                List<String> list = null;
+//                System.out.println(list.toString());
+//                mqttRequest.send("123" , "hello mqtt client , I m mqtt other client");
+
+//                Intent intent = new Intent(MainActivity.this , TestActivity.class);
+//                startActivity(intent);
             }
         });
 
-        TwinklingRefreshLayout refreshLayout = findViewById(R.id.refreshLayout);
-        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
-            @Override
-            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
-                super.onRefresh(refreshLayout);
-//                refreshLayout.finishRefreshing();
-            }
+//        TwinklingRefreshLayout refreshLayout = findViewById(R.id.refreshLayout);
+//        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+//            @Override
+//            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+//                super.onRefresh(refreshLayout);
+////                refreshLayout.finishRefreshing();
+//            }
+//
+//            @Override
+//            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+//                super.onLoadMore(refreshLayout);
+//                refreshLayout.finishLoadmore();
+//            }
+//        });
 
-            @Override
-            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
-                super.onLoadMore(refreshLayout);
-                refreshLayout.finishLoadmore();
-            }
-        });
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(OrientationHelper.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-        ArrayList<BaseAdapterResp> arrayList = new ArrayList<>();
-        for (int i = 0 ; i < 100 ; i++) {
-            ItemData itemData = new ItemData();
-            itemData.setItem_t("hello！！");
-            arrayList.add(itemData);
-        }
-        BaseRecyclerViewAdapter adapter = new BaseRecyclerViewAdapter(this , R.layout.item_main , 1 , arrayList);
-        adapter.setOnItemClickLisneter(new OnItemClickListener() {
-
-            /**
-             * 列表点击
-             *
-             * @param resp     返回对象
-             * @param Type     类型
-             * @param position 点击列表标识
-             */
-            @Override
-            public void OnItemClick(BaseAdapterResp resp, int Type, int position) {
-                ArrayList<String> array = null;
-                System.out.print(array.size());
-//                ItemData itemData = (ItemData) resp;
-//                System.out.println(itemData.toString());
+//        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        ArrayList<BaseAdapterResp> arrayList = new ArrayList<>();
+//        for (int i = 0 ; i < 100 ; i++) {
+//            ItemData itemData = new ItemData();
+//            itemData.setItem_t("hello！！");
+//            arrayList.add(itemData);
+//        }
+//        BaseRecyclerViewAdapter adapter = new BaseRecyclerViewAdapter(this , R.layout.item_main , 1 , arrayList);
+//        adapter.setOnItemClickLisneter(new OnItemClickListener() {
+//
+//            /**
+//             * 列表点击
+//             *
+//             * @param resp     返回对象
+//             * @param Type     类型
+//             * @param position 点击列表标识
+//             */
+//            @Override
+//            public void OnItemClick(BaseAdapterResp resp, int Type, int position) {
+////                ItemData itemData = (ItemData) resp;
+////                System.out.println(itemData.toString());
 //                new RequestApi(MainActivity.this).RequestTopic(response , 1);
-            }
-        });
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this , LinearLayoutManager.VERTICAL));
+//            }
+//        });
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this , LinearLayoutManager.VERTICAL));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -286,7 +364,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
      * @param msg         请求返回的数据
      */
     @Override
-    public void onUdpSuccess(int requestCode, String msg) {
+    public void onUdpSuccess(@Nullable Integer requestCode, @Nullable String msg) {
         Toast.makeText(context , msg , Toast.LENGTH_SHORT).show();
     }
 
@@ -297,7 +375,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
      * @param throwable   请求失败的对象
      */
     @Override
-    public void onUdpError(int requestCode, Throwable throwable) {
+    public void onUdpError(@Nullable Integer requestCode, @Nullable Throwable throwable , @Nullable Integer code) {
         Toast.makeText(context , throwable.toString() , Toast.LENGTH_SHORT).show();
     }
 
@@ -322,6 +400,7 @@ public class MainActivity extends BaseActivity implements IView , HttpCallback.R
     public void onError(String requestCode, Throwable throwable) {
         Toast.makeText(context , requestCode + "--" + throwable.toString() , Toast.LENGTH_SHORT).show();
     }
+
 }
 
 /**

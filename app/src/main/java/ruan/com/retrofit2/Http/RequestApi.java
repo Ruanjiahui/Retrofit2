@@ -22,17 +22,17 @@ public class RequestApi {
 
     private Retrofit retrofit;
     private Context context;
-    private BaseNetCallback netCallback;
+    private BaseNetCallback netCallback = null;
 
     public RequestApi(Context context){
         this.context = context;
-        retrofit = RetrofitManager.getInstance();
+        retrofit = RetrofitManager.Companion.getInstance();
     }
 
     public RequestApi(Context context , BaseNetCallback netCallback){
         this.context = context;
         this.netCallback = netCallback;
-        retrofit = RetrofitManager.getInstance();
+        retrofit = RetrofitManager.Companion.getInstance();
     }
 
     /**

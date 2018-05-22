@@ -29,6 +29,7 @@ import ruan.com.Utils.AppPhoneMgr;
 import ruan.com.retrofit2.BugUploadBean;
 import ruan.com.retrofit2.Http.RequestApi;
 import ruan.com.retrofit2.HttpBaseResp;
+import ruan.com.retrofit2.Log.LogFactory;
 
 /**
  * Created by 19820 on 2018/4/19.
@@ -141,10 +142,11 @@ public class CrashFactory implements Thread.UncaughtExceptionHandler {
         bugUploadBean.setDebugOS(AppPhoneMgr.getDeviceSystem());
 
         new RequestApi(mContext).UploadBug(bugUploadBean, new HttpCallback.Response() {
+
             @Override
             public void onSuccess(int requestCode, HttpResponse response) {
                 HttpBaseResp resp = (HttpBaseResp) response;
-                Log.e("Ruan" , resp.toString());
+                LogFactory.getInstance(CrashFactory.class).i("UploadBug" , resp.toString());
                 if (resp.getCode() == 200000){
                     System.out.println("bug 提交成功");
                 }
